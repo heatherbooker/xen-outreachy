@@ -1,18 +1,17 @@
 #!/usr/bin/zsh
 
-NUM_SCRIPTS=5
+MBOX_URLS='mboxUrls.txt'
 ENDPOINT="https://lists.xenproject.org/archives/html/mbox/"
-FILE="xen-devel-2015-0"
+DIR='mboxes/'
 EXT=".txt"
 
-
-for i in {1..$NUM_SCRIPTS}
+# Each line of MBOX_URLS file is an mbox filename.
+while read -r filename
 do
-    filename=$FILE$i
     mbox=$ENDPOINT$filename
     content="$(curl -s $mbox)"
-    echo "$content" >> $filename$EXT 
-done
+    echo "$content" >> $DIR$filename$EXT
+done < "$MBOX_URLS"
 
-echo "Retrieved $NUM_SCRIPTS mboxes"
+echo "Retrieved mboxes"
 

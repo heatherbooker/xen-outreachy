@@ -1,0 +1,6 @@
+# Log and output files
+*.log
+*.out
+
+# Mbox archive listing
+index.html
