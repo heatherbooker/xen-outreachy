@@ -4,3 +4,7 @@
 
 # Mbox archive listing
 index.html
+
+# Mbox data obtained using repo scripts.
+mboxUrls.txt
+mboxes
