@@ -8,3 +8,6 @@ index.html
 # Mbox data obtained using repo scripts.
 mboxUrls.txt
 mboxes
+
+# Python sh**ugar
+__pycache__
