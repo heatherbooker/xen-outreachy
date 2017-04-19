@@ -27,8 +27,7 @@ wget https://lists.xenproject.org/archives/html/mbox/
 - Download xen-devel mboxes (__if using bash shell, modify first line of getMboxes.sh first!__):
 
 ```bash
-python getMboxNames.py
-./getMboxes.sh
+python getMboxNames.py && ./getMboxes.sh
 ```
 
 - Make sure ES is running (for me, this means `sudo systemctl start elasticsearch.service`).
@@ -38,4 +37,11 @@ python getMboxNames.py
 ```bash
 python perceval-mbox.py
 ```
+
+
+BONUS:
+
+Debugging is beautiful:
+
+![Beautiful diagonal lines of alphanumeric characters in vim.](https://puu.sh/voZbF/1459719eee.pn://puu.sh/voZbF/1459719eee.png)
 
