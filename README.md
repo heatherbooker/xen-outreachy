@@ -44,7 +44,11 @@ And now we wait, while it does its magic.
 
 #### Querying:
 
-TBA
+```bash
+python queries.py
+```
+
+More to come.
 
 #### Caveats:
 
@@ -53,7 +57,7 @@ TBA
 
 #### Improvements:
 
-- Using the Elasticsearch [bulk API](https://elasticsearch-py.readthedocs.io/en/master/helpers.html#bulk-helpers) through the python script may reduce ingest time. Tha would be nice.
+- Using the Elasticsearch [bulk API](https://elasticsearch-py.readthedocs.io/en/master/helpers.html#bulk-helpers) through the python script may reduce ingest time. That would be nice.
 
 BONUS:
 

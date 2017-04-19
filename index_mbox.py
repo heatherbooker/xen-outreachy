@@ -10,6 +10,21 @@ dest_dir = '/home/heather/dev/xen/mboxes'
 repo = MBox(uri=src_url, dirpath=dest_dir)
 logfile = open('mboxAnalysis.log', 'w')
 
+def create_index():
+    mapping = {
+        "properties": {
+            "data": {
+                "properties": {
+                    "Message-ID": {
+                        "type": "keyword"
+                    }
+                }
+            }
+        }
+    }
+    es.indices.create(index='xenmbox', ignore=400)
+    es.indices.put_mapping(index='xenmbox', doc_type='unknown', body=mapping, update_all_types=True)
+
 def log_error(error, uuid=None, is_message=False):
     err_log = '\nOh potatoes! Something broke: ' + str(error)
     if is_message:
@@ -32,7 +47,7 @@ def get_jwz_message(message, uuid):
 def add_to_ES(doc_type, message):
     try:
         es.index(index="xenmbox", doc_type=doc_type,
-                id=message['uuid'], body=message)
+                id=message['data']['Message-ID'], body=message)
     except UnicodeEncodeError as error:
         log_error(error, message['uuid'], True)        
 
@@ -78,7 +93,7 @@ def index_thread_in_ES(ctr, ischild):
         for child_ctr in ctr.children:
             index_thread_in_ES(child_ctr, True)
 
-
+create_index()
 message_list, message_map = parse_messages(repo)
 containers = thread(message_list, group_by_subject=False)
 
