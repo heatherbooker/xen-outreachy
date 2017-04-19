@@ -37,7 +37,7 @@ python getMboxNames.py && ./getMboxes.sh
 __Warning:__ This may seriously tax your computer. Be wise.
 
 ```bash
-python perceval-mbox.py
+python index_mbox.py
 ```
 
 And now we wait, while it does its magic.
@@ -50,6 +50,10 @@ TBA
 
 - Some messages appear to not get threaded. They are added under the type `unknown`.  
 - My computer struggles as Elasticsearch attempts to consume all available resources and then some. Mileage may vary.
+
+#### Improvements:
+
+- Using the Elasticsearch [bulk API](https://elasticsearch-py.readthedocs.io/en/master/helpers.html#bulk-helpers) through the python script may reduce ingest time. Tha would be nice.
 
 BONUS:
 
