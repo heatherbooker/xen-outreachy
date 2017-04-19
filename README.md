@@ -34,10 +34,22 @@ python getMboxNames.py && ./getMboxes.sh
 
 - Analyze mbox data using Perceval, and input into Elasticsearch with each message thread being an ES "type":
 
+__Warning:__ This may seriously tax your computer. Be wise.
+
 ```bash
 python perceval-mbox.py
 ```
 
+And now we wait, while it does its magic.
+
+#### Querying:
+
+TBA
+
+#### Caveats:
+
+- Some messages appear to not get threaded. They are added under the type `unknown`.  
+- My computer struggles as Elasticsearch attempts to consume all available resources and then some. Mileage may vary.
 
 BONUS:
 

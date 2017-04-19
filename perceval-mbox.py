@@ -5,7 +5,7 @@ from jwzthreading import thread, Message
 es = Elasticsearch()
 
 src_url = 'https://lists.xenproject.org/archives/html/mbox/'
-dest_dir = '/home/heather/dev/xen/sample'
+dest_dir = '/home/heather/dev/xen/mboxes'
 
 repo = MBox(uri=src_url, dirpath=dest_dir)
 logfile = open('mboxAnalysis.log', 'w')
@@ -31,32 +31,29 @@ def get_jwz_message(message, uuid):
 
 def add_to_ES(doc_type, message):
     try:
-        response = es.index(index="test", doc_type=doc_type,
+        es.index(index="xenmbox", doc_type=doc_type,
                 id=message['uuid'], body=message)
     except UnicodeEncodeError as error:
         log_error(error, message['uuid'], True)        
 
 
 def parse_messages(repo):
-    original_msg_count = 0
     message_list = []
     message_map = {}
     prev_msg_hash = None
     prev_uuid = None
-    counter = 0
     for message in repo.fetch():
-        original_msg_count += 1
         uuid = message['uuid']
         msg_in_bytes = msg_to_bytes(message['data'])
         msg_hash = hashlib.sha256(msg_in_bytes).hexdigest()
         if not prev_msg_hash == msg_hash and not uuid == prev_uuid:
-            counter += 1
-            message_list.append(get_jwz_message(message, uuid))
-            prev_msg_hash = msg_hash
-            prev_uuid = uuid
-            message_map[uuid] = message
-    print('Total unique messages: ' + str(counter))
-    print('Original messages fetched from mbox: ' + str(original_msg_count))
+            try:
+                message_list.append(get_jwz_message(message, uuid))
+                prev_msg_hash = msg_hash
+                prev_uuid = uuid
+                message_map[uuid] = message
+            except TypeError as err:
+                print('One message discarded due to error while parsing: ' + str(err))
     return message_list, message_map
 
 def collect_msg_ids(container):
@@ -70,13 +67,12 @@ def get_es_type(container):
     return ''.join(c for c in thread_subject if (c.isalnum() or c.isspace()))
 
 def index_thread_in_ES(ctr, ischild):
-    container = None
     try:
         container = ctr.to_dict()
         es_type = get_es_type(container)
         for msg_id in collect_msg_ids(container):
             # Pop removes and retrieves msg.
-            add_to_ES('message', message_map.pop(msg_id))
+            add_to_ES(es_type, message_map.pop(msg_id))
     except ValueError as error:
         log_error(error)
         for child_ctr in ctr.children:
@@ -89,7 +85,10 @@ containers = thread(message_list, group_by_subject=False)
 for ctr in containers:
     index_thread_in_ES(ctr, False)
 
-logfile.write('\n\nRemaining messages that have not been added to ES: ' + str(message_map.keys()))
+# Just add messages that somehow evaded being
+# threaded to ES under the type "unknown".
+for message in message_map.keys():
+    add_to_ES('unknown', message_map[message])
 
 logfile.close()
 
