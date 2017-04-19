@@ -27,8 +27,10 @@ wget https://lists.xenproject.org/archives/html/mbox/
 - Download xen-devel mboxes (__if using bash shell, modify first line of getMboxes.sh first!__):
 
 ```bash
-python getMboxNames.py && ./getMboxes.sh
+python getMboxNames.py <number of mboxes you want to fetch> && ./getMboxes.sh
 ```
+
+By default it will fetch one mbox. If you want more, specify the number as an argument to the python script. `all` will fetch all of the mboxes.
 
 - Make sure ES is running (for me, this means `sudo systemctl start elasticsearch.service`).
 
@@ -57,7 +59,8 @@ More to come.
 
 #### Improvements:
 
-- Using the Elasticsearch [bulk API](https://elasticsearch-py.readthedocs.io/en/master/helpers.html#bulk-helpers) through the python script may reduce ingest time. That would be nice.
+- Using the Elasticsearch [bulk API](https://elasticsearch-py.readthedocs.io/en/master/helpers.html#bulk-helpers) through the python script may reduce ingest time. That would be nice.  
+- getMboxNames.py could randomly fetch archive names instead of sequentially.
 
 BONUS:
 
